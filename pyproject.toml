@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "best-of-n-memory-augmented-world-models"
 version = "0.1.0"
-description = "Synthetic diagnostics for Best-of-N inference in memory-augmented world models."
+description = "Synthetic diagnostics for memory-impostor rollouts in retrieval-augmented world models."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}

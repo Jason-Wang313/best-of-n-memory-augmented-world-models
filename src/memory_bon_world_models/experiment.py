@@ -102,6 +102,16 @@ def smoke_config(seed: int = 7) -> ExperimentConfig:
     return ExperimentConfig(seed=seed, trials=18, ns=(1, 4, 16, 64), stale_fractions=(0.85,), memory_total=260)
 
 
+def v2paper_config(seed: int = 7) -> ExperimentConfig:
+    return ExperimentConfig(
+        seed=seed,
+        trials=18,
+        ns=(1, 4, 16, 64),
+        stale_fractions=(0.45, 0.65, 0.85, 0.93),
+        memory_total=260,
+    )
+
+
 def paper_config(seed: int = 7) -> ExperimentConfig:
     return ExperimentConfig(
         seed=seed,

@@ -5,11 +5,12 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\hypersetup{hidelinks}
 \usepackage{microtype}
 \usepackage{url}
 \input{results_macros.tex}
 
-\title{When More Rollouts Remember the Wrong Thing:\\Best-of-N Amplifies Stale Memory in Retrieval-Augmented World Models}
+\title{Memory-Impostor Rollouts in Retrieval-Augmented World Models}
 
 % The ICLR submission style keeps this anonymous while \iclrfinalcopy is commented.
 \author{Anonymous Authors}
@@ -17,7 +18,6 @@
 %\iclrfinalcopy
 
 \newtheorem{proposition}{Proposition}
-\newcommand{\bon}{Best-of-N}
 \newcommand{\meg}{\mathrm{MEG}}
 
 \begin{document}
@@ -25,23 +25,25 @@
 
 \begin{abstract}
 Memory-augmented world models retrieve episodic transitions, trajectories, or cases
-to improve prediction under sparse data. Separately, \bon{} inference samples many
-candidate futures and selects the one with the highest model proxy. This paper
-studies a narrow interaction between the two: stale or support-mismatched memory
-can create rare \emph{memory-impostor} rollouts with high predicted value and low
-true value, and \bon{} makes those rollouts more likely to be selected. We give a
-finite-N mechanism statement, propose diagnostics based on retrieval precision,
-staleness, counterfactual memory dropout, and proxy-true gap, and instantiate the
-mechanism in a controlled latent-regime world. In the main stale-memory condition,
-naive memory \bon{} improves its proxy score while true return falls from
-\NaiveNOneTrue{} at $N=1$ to \NaiveMaxTrue{} at $N=\MaxN{}$; selected rollouts
-have \NaiveMaxPrecision{} retrieval precision, \NaiveMaxStale{} stale retrieval,
-and \NaiveMaxHallucination{} hallucinated-rollout rate. A repair using recency
-retrieval, disagreement-aware memory gating, and dropout-risk penalties reaches
-\RepairedMaxTrue{} true return at the same $N$, narrowing but not eliminating the
-gap to an oracle retriever. The claim is intentionally scoped: this is a runnable
-diagnostic for an architecture-specific failure mode, not evidence that memory is
-generally harmful.
+to improve prediction under sparse data. This paper studies a narrow failure at
+the interface of retrieval and rollout selection: stale or support-mismatched
+memory can create \emph{memory-impostor} rollouts, candidates whose predicted
+value is high because retrieved cases come from the wrong latent regime while
+their true executed value is low. Increasing the candidate budget then makes
+the planner more likely to select those impostors. We give a finite-$N$
+mechanism statement, propose provenance diagnostics based on retrieval
+precision, staleness, counterfactual memory dropout, hallucinated-rollout rate,
+and proxy-true gap, and instantiate the mechanism in a controlled
+latent-regime world. In the main stale-memory condition, naive memory selection
+improves its proxy score while true return falls from \NaiveNOneTrue{} at
+$N=1$ to \NaiveMaxTrue{} at $N=\MaxN{}$; selected rollouts have
+\NaiveMaxPrecision{} retrieval precision, \NaiveMaxStale{} stale retrieval,
+and \NaiveMaxHallucination{} hallucinated-rollout rate. A repair using
+recency-aware retrieval, disagreement-aware memory gating, and dropout-risk
+penalties reaches \RepairedMaxTrue{} true return at the same $N$, narrowing
+but not eliminating the gap to an oracle retriever. The claim is intentionally
+scoped: this is a runnable diagnostic for an architecture-specific failure
+mode, not evidence that memory is generally harmful.
 \end{abstract}
 
 \section{Introduction}
@@ -63,19 +65,23 @@ transition predictions.
 This paper asks what happens when these two useful ideas are composed under
 support mismatch. If the retriever returns stale cases from a latent regime with
 the wrong transition sign, a memory-augmented model can assign high value to a
-candidate future that the real environment will not realize. \bon{} then searches
-for that error. More samples need not make the selected rollout more grounded;
-they can make it a better impostor under the memory-biased proxy.
+candidate future that the real environment will not realize. Max-score
+rollout selection then searches for that error. More samples need not make the
+selected rollout more grounded; they can make it a better impostor under the
+memory-biased proxy.
 
 Our contributions are:
 \begin{itemize}
-    \item a finite-N statement of memory-impostor amplification;
-    \item diagnostics for selected-rollout retrieval precision, staleness,
-    memory dropout variance, hallucinated-rollout rate, and the memory
-    exploitation gap;
-    \item a controlled synthetic world where latent dynamics, memory provenance,
-    and true rollout utility are all known;
-    \item a simple repair that combines recency-aware retrieval,
+    \item we define the memory-impostor rollout failure mode for
+    retrieval-augmented world-model planning;
+    \item we give a finite-$N$ mechanism statement showing why larger candidate
+    budgets amplify high-proxy, low-true memory impostors;
+    \item we introduce provenance diagnostics for selected-rollout retrieval
+    precision, staleness, memory dropout variance, hallucinated-rollout rate,
+    and memory exploitation gap;
+    \item we instantiate the mechanism in a controlled synthetic world where
+    latent dynamics, memory provenance, and true rollout utility are all known;
+    \item we test a simple non-oracle repair combining recency-aware retrieval,
     disagreement-aware memory gating, and an uncertainty penalty.
 \end{itemize}
 
@@ -122,7 +128,7 @@ has proxy score $s_I$ and true utility $u_I$, and every grounded candidate has
 proxy score $s_G$ and true utility $u_G$, with $s_I>s_G$ but $u_I<u_G$.
 
 \begin{proposition}[Finite-N memory-impostor amplification]
-If a \bon{} selector chooses the candidate with highest proxy score from $N$
+If a max-score selector chooses the candidate with highest proxy score from $N$
 independent samples under the two-type model above, then
 \[
 P(\text{impostor selected}) = 1-(1-p)^N,
@@ -156,7 +162,7 @@ The repair intentionally uses only observable memory metadata and transition
 statistics, not the hidden regime label. It has three parts. First, retrieval is
 recency-aware, so recent calibration transitions can compete with dense stale
 cases. Second, memory interpolation is gated down when retrieved cases disagree
-or are old. Third, the \bon{} proxy is penalized by the average dropout-risk
+or are old. Third, the selection proxy is penalized by the average dropout-risk
 score. This is a small repair rather than a claim of optimality; the point is to
 test whether the diagnosis points toward an effective intervention.
 
@@ -180,8 +186,8 @@ the repaired memory model.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{figures/bon_scaling_curves.png}
-    \caption{In the stale-memory condition, naive memory \bon{} improves model
+    \includegraphics[width=\linewidth]{figures/candidate_budget_curves.png}
+    \caption{In the stale-memory condition, naive memory selection improves model
     proxy score as $N$ grows while true return degrades. The repaired selector
     tracks the non-memory/oracle direction because it suppresses stale retrieved
     transitions.}
@@ -189,9 +195,9 @@ the repaired memory model.
 \end{figure}
 
 Figure~\ref{fig:scaling} shows the main scaling pattern. At stale fraction
-\MainStaleFraction{}, naive memory \bon{} falls from \NaiveNOneTrue{} true return
-at $N=1$ to \NaiveMaxTrue{} at $N=\MaxN{}$, even though its selected proxy score
-is \NaiveMaxProxy{}. The resulting exploitation gap is \NaiveMaxGap{}. The
+\MainStaleFraction{}, naive memory selection falls from \NaiveNOneTrue{} true
+return at $N=1$ to \NaiveMaxTrue{} at $N=\MaxN{}$, even though its selected
+proxy score is \NaiveMaxProxy{}. The resulting exploitation gap is \NaiveMaxGap{}. The
 non-memory baseline reaches \BaseMaxTrue{}, the repaired model reaches
 \RepairedMaxTrue{}, and the oracle retriever reaches \OracleMaxTrue{}.
 
@@ -233,9 +239,9 @@ The benchmark is synthetic and deliberately low-dimensional. That is a strength
 for mechanism isolation and a weakness for external validity. The repair is also
 minimal: realistic systems would need stronger retrieval calibration, diversity
 constraints, causal or regime-aware memories, and task-specific uncertainty
-models. Finally, the formal claim is only the two-type finite-N amplification
-law; it does not prove that a particular neural retriever will produce impostors
-in deployment.
+models. Finally, the formal claim is only the two-type finite-$N$
+memory-impostor amplification mechanism; it does not prove that a particular
+neural retriever will produce impostors in deployment.
 
 \section{Reproducibility and Checklist}
 

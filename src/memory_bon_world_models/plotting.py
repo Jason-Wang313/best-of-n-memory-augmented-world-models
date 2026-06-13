@@ -37,13 +37,13 @@ def plot_main_curves(summary: pd.DataFrame, output_dir: Path | str, *, stale_fra
         (axes[1], "Model proxy", "mean proxy score"),
     ]:
         axis.set_xscale("log", base=2)
-        axis.set_xlabel("Best-of-N samples")
+        axis.set_xlabel("candidate budget N")
         axis.set_title(title)
         axis.set_ylabel(ylabel)
         axis.grid(alpha=0.25)
     axes[0].legend(frameon=False, fontsize=8)
     fig.tight_layout()
-    path = output / "bon_scaling_curves.png"
+    path = output / "candidate_budget_curves.png"
     fig.savefig(path, dpi=220)
     plt.close(fig)
     paths.append(path)
@@ -58,7 +58,7 @@ def plot_main_curves(summary: pd.DataFrame, output_dir: Path | str, *, stale_fra
     axes[1].set_ylabel("hallucinated rollout rate")
     for axis, title in [(axes[0], "Selected retrieval"), (axes[1], "Rollout risk")]:
         axis.set_xscale("log", base=2)
-        axis.set_xlabel("Best-of-N samples")
+        axis.set_xlabel("candidate budget N")
         axis.set_title(title)
         axis.grid(alpha=0.25)
     axes[0].legend(frameon=False, fontsize=8)

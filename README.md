@@ -1,21 +1,21 @@
-# Best-of-N Memory-Augmented World Models
+# Memory-Impostor Rollouts
 
 This repository is a first-pass anonymous ICLR-style research package on a
-narrow failure mode of Best-of-N inference for retrieval-, episodic-memory-, and
-case-based world models.
+narrow failure mode of retrieval-, episodic-memory-, and case-based world
+models under max-score rollout selection.
 
 The central question is not whether memory helps world models. It often does.
 The question here is what happens when a memory-augmented dynamics model is
 queried under support mismatch: the nearest retrieved cases are stale or from a
-latent regime with the wrong transition sign, and a Best-of-N planner selects
-the candidate rollout with the highest model-predicted return.
+latent regime with the wrong transition sign, and an N-candidate planner selects
+the rollout with the highest model-predicted return.
 
 The package includes:
 
 - a controlled synthetic regime-switching world with measurable latent regimes,
   memory staleness, retrieval precision, and true rollout utility;
 - naive, oracle, non-memory, and repaired memory-augmented world models;
-- Best-of-N planning experiments across `N`, staleness, and repair settings;
+- candidate-budget rollout-selection experiments across `N`, staleness, and repair settings;
 - publication figures and raw CSV outputs;
 - literature sweep and hostile prior-work docs;
 - an anonymous ICLR 2026 LaTeX paper source and build script.
@@ -26,23 +26,24 @@ The package includes:
 cd C:\Users\wangz\best-of-n-memory-augmented-world-models
 python -m pip install -e .
 pytest
-python experiments\run_synthetic.py --preset smoke
+python experiments\run_synthetic.py --preset v2paper
 python scripts\build_literature.py
 python scripts\build_paper.py
 ```
 
-The final PDF target is:
+The versioned Desktop PDF target is:
 
 ```text
-C:\Users\wangz\Downloads\best-of-n-memory-augmented-world-models.pdf
+C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v2.pdf
 ```
 
 ## Paper Angle
 
 The final contribution is deliberately scoped as a mechanism paper:
 
-1. Best-of-N amplifies a rare candidate type whenever that type has higher proxy
-   score and lower true value than grounded candidates.
+1. Max-score N-candidate selection amplifies a rare candidate type whenever
+   that type has higher proxy score and lower true value than grounded
+   candidates.
 2. In memory-augmented world models, stale or support-mismatched retrieval can
    create exactly that candidate type: memory-impostor rollouts.
 3. A diagnostic based on retrieval precision, staleness, proxy-true gap, and

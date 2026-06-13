@@ -1,4 +1,4 @@
-"""Controlled Best-of-N diagnostics for memory-augmented world models."""
+"""Controlled memory-impostor diagnostics for memory-augmented world models."""
 
 from .environment import RegimeWorld, Regime
 from .experiment import run_suite

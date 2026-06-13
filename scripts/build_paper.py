@@ -1,4 +1,4 @@
-"""Build the anonymous ICLR paper and copy the final PDF to Downloads."""
+"""Build the anonymous ICLR paper and copy the versioned PDF to the Desktop."""
 
 from __future__ import annotations
 
@@ -12,7 +12,9 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 PAPER = ROOT / "paper"
 DOCS = ROOT / "docs"
-DOWNLOADS_PDF = ROOT.parent / "Downloads" / "best-of-n-memory-augmented-world-models.pdf"
+ONEDRIVE_DESKTOP = Path.home() / "OneDrive" / "Desktop"
+DESKTOP = ONEDRIVE_DESKTOP if ONEDRIVE_DESKTOP.exists() else Path.home() / "Desktop"
+DESKTOP_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v2.pdf"
 
 
 def macro(name: str, value: str) -> str:
@@ -20,11 +22,11 @@ def macro(name: str, value: str) -> str:
 
 
 def _summary_path() -> Path:
-    for rel in ("results/paper/summary.csv", "results/full/summary.csv", "results/smoke/summary.csv"):
+    for rel in ("results/v2paper/summary.csv", "results/paper/summary.csv", "results/full/summary.csv", "results/smoke/summary.csv"):
         path = ROOT / rel
         if path.exists():
             return path
-    raise FileNotFoundError("missing experiment summary; run python experiments/run_synthetic.py --preset paper")
+    raise FileNotFoundError("missing experiment summary; run python experiments/run_synthetic.py --preset v2paper")
 
 
 def write_result_macros() -> Path:
@@ -70,6 +72,11 @@ def _run(command: list[str]) -> None:
 
 def run_latex() -> Path:
     errors: list[str] = []
+    for suffix in (".aux", ".bbl", ".blg", ".log", ".out", ".pdf"):
+        artifact = PAPER / f"main{suffix}"
+        if artifact.exists():
+            artifact.unlink()
+
     latexmk = shutil.which("latexmk")
     if latexmk is not None:
         try:
@@ -95,9 +102,9 @@ def run_latex() -> Path:
 
     local_pdf = PAPER / "best-of-n-memory-augmented-world-models.pdf"
     shutil.copy2(pdf, local_pdf)
-    DOWNLOADS_PDF.parent.mkdir(exist_ok=True)
-    shutil.copy2(pdf, DOWNLOADS_PDF)
-    return DOWNLOADS_PDF
+    DESKTOP_PDF.parent.mkdir(exist_ok=True)
+    shutil.copy2(pdf, DESKTOP_PDF)
+    return DESKTOP_PDF
 
 
 def main() -> None:

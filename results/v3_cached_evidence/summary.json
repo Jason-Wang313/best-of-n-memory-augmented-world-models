@@ -1,0 +1,41 @@
+{
+  "diagnostics": {
+    "harmful_stale_levels": 3,
+    "precision_gap_corr": -0.5425586369583165,
+    "risk_gap_corr": -0.18485657985061657
+  },
+  "main_stale": 0.85,
+  "max_n": 64,
+  "min_n": 1,
+  "naive": {
+    "delta_proxy": 3.3526667512978574,
+    "delta_true": -5.464444444444443,
+    "harm_rate": 0.7777777777777778,
+    "max_gap": 10.743489998141062,
+    "max_gap_ci_high": 11.366653547127129,
+    "max_gap_ci_low": 10.046349107319188,
+    "max_true": -13.334444444444443,
+    "max_true_ci_high": -12.832694444444448,
+    "max_true_ci_low": -13.785555555555558,
+    "n1_true": -7.87,
+    "retrieval_precision": 0.1566358024691357,
+    "stale_rate": 0.8433641975308642
+  },
+  "oracle": {
+    "gap_after_repair": 0.16833333333333322,
+    "max_true": -1.7283333333333335
+  },
+  "raw_rows": 1152,
+  "repaired": {
+    "gain_over_naive": 11.437777777777777,
+    "hallucination": 0.0,
+    "harm_rate": 0.1111111111111111,
+    "max_true": -1.8966666666666667,
+    "max_true_ci_high": -1.6105555555555557,
+    "max_true_ci_low": -2.1255555555555556,
+    "retrieval_precision": 0.5088383838383839,
+    "stale_rate": 0.4911616161616161
+  },
+  "stale_levels": 4,
+  "summary_rows": 64
+}

@@ -1,0 +1,15 @@
+strategy,x,y,pearson_r
+memory_bon,diagnostic_risk,proxy_true_gap,-0.18485657985061657
+memory_bon,retrieval_stale_rate,proxy_true_gap,0.5425586369583167
+memory_bon,retrieval_precision,proxy_true_gap,-0.5425586369583165
+memory_bon,dropout_variance,proxy_true_gap,-0.30591220314318035
+memory_bon,retrieval_disagreement,proxy_true_gap,-0.43032510189770684
+memory_bon,diagnostic_risk,hallucinated_rollout,-0.23132297353724007
+memory_bon,retrieval_precision,hallucinated_rollout,-0.2709662044364079
+repaired_memory_bon,diagnostic_risk,proxy_true_gap,-0.29188414266204266
+repaired_memory_bon,retrieval_stale_rate,proxy_true_gap,-0.39908927027450664
+repaired_memory_bon,retrieval_precision,proxy_true_gap,0.3990892702745063
+repaired_memory_bon,dropout_variance,proxy_true_gap,-0.026261605583614456
+repaired_memory_bon,retrieval_disagreement,proxy_true_gap,-0.13962789886519766
+repaired_memory_bon,diagnostic_risk,hallucinated_rollout,
+repaired_memory_bon,retrieval_precision,hallucinated_rollout,

@@ -34,7 +34,7 @@ statement, not a theorem about arbitrary neural retrievers.
 
 ## Strongest Empirical Result
 
-In the completed v2 paper run at stale fraction 0.85 and `N=64`, naive
+In the completed v3 base run at stale fraction 0.85 and `N=64`, naive
 memory-augmented max-score selected rollouts reached mean true return `-13.334`
 while its model proxy score was `-2.591`, producing a proxy-true gap of `10.743`.
 The non-memory baseline reached `-0.180`, and the oracle memory retriever reached
@@ -57,9 +57,8 @@ to `-1.897` and reduced hallucinated-rollout rate to `0.0%`.
 ## Biggest Weaknesses
 
 - The benchmark is synthetic and one-dimensional.
-- The v2 submission artifact should use the bounded multi-staleness
-  `results/v2paper/` preset when present. The larger `results/paper/` preset
-  remains a slower optional scale-up.
+- The v3 submission artifact uses the checked-in `results/v3_base/` CSVs plus
+  the derived `results/v3_cached_evidence/` ledgers.
 - The repair is intentionally simple and should be treated as a diagnostic
   intervention rather than a production-grade retrieval policy.
 - The paper does not validate on neural simulators, robotics environments, or
@@ -67,24 +66,26 @@ to `-1.897` and reduced hallucinated-rollout rate to `0.0%`.
 
 ## Paper-Readiness Judgment
 
-Ready as a scoped mechanism paper only if the manuscript foregrounds the
-memory-impostor mechanism, keeps external-validity limitations visible, and
-uses the strongest completed experiment preset available in the repository.
+Ready as a scoped mechanism paper: the v3 manuscript foregrounds the
+memory-impostor mechanism, keeps external-validity limitations visible, reaches
+25 pages, and includes cached stress evidence plus an audit script.
 
 ## Verification
 
 - Unit tests: `pytest -q` passed with 8 tests.
 - Literature generation: `python scripts/build_literature.py` passed.
-- V2 paper experiment: `python experiments/run_synthetic.py --preset v2paper`
-  passed and generated the paper-facing CSV results plus figures.
-- Paper build: `python scripts/build_paper.py` passed using `pdflatex`/BibTeX
-  fallback after `latexmk` was unavailable due missing Perl.
+- V3 cached evidence: `python experiments/18_v3_cached_evidence.py` regenerates
+  bootstrap intervals, harm rates, diagnostic correlations, figures, and macros.
+- Paper build: `python scripts/build_paper.py` passed and writes matching repo
+  and Desktop v3 PDFs.
+- Submission audit: `python scripts/run_v3_claim_audit.py` checks page count,
+  hashes, source map, stale artifact names, evidence values, and LaTeX log.
 - Anonymous ICLR style: `paper/main.tex` uses `iclr2026_conference,times`, keeps
   `\iclrfinalcopy` commented, and declares `Anonymous Authors`.
 
 ## Exact PDF Path
 
-`C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v2.pdf`
+`C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v3.pdf`
 
 ## GitHub Repo URL
 

@@ -1,6 +1,6 @@
 # Memory-Impostor Rollouts
 
-This repository is a first-pass anonymous ICLR-style research package on a
+This repository is a v3 anonymous ICLR-style research package on a
 narrow failure mode of retrieval-, episodic-memory-, and case-based world
 models under max-score rollout selection.
 
@@ -16,7 +16,7 @@ The package includes:
   memory staleness, retrieval precision, and true rollout utility;
 - naive, oracle, non-memory, and repaired memory-augmented world models;
 - candidate-budget rollout-selection experiments across `N`, staleness, and repair settings;
-- publication figures and raw CSV outputs;
+- publication figures, raw CSV outputs, and v3 cached stress evidence;
 - literature sweep and hostile prior-work docs;
 - an anonymous ICLR 2026 LaTeX paper source and build script.
 
@@ -26,15 +26,16 @@ The package includes:
 cd C:\Users\wangz\best-of-n-memory-augmented-world-models
 python -m pip install -e .
 pytest
-python experiments\run_synthetic.py --preset v2paper
+python experiments\18_v3_cached_evidence.py
 python scripts\build_literature.py
 python scripts\build_paper.py
+python scripts\run_v3_claim_audit.py
 ```
 
 The versioned Desktop PDF target is:
 
 ```text
-C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v2.pdf
+C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v3.pdf
 ```
 
 ## Paper Angle

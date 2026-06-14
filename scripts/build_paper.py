@@ -14,7 +14,8 @@ PAPER = ROOT / "paper"
 DOCS = ROOT / "docs"
 ONEDRIVE_DESKTOP = Path.home() / "OneDrive" / "Desktop"
 DESKTOP = ONEDRIVE_DESKTOP if ONEDRIVE_DESKTOP.exists() else Path.home() / "Desktop"
-DESKTOP_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v2.pdf"
+DESKTOP_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v3.pdf"
+FINAL_PDF = PAPER / "final" / "best-of-n-memory-augmented-world-models-v3.pdf"
 
 
 def macro(name: str, value: str) -> str:
@@ -22,11 +23,11 @@ def macro(name: str, value: str) -> str:
 
 
 def _summary_path() -> Path:
-    for rel in ("results/v2paper/summary.csv", "results/paper/summary.csv", "results/full/summary.csv", "results/smoke/summary.csv"):
+    for rel in ("results/v3_base/summary.csv", "results/paper/summary.csv", "results/full/summary.csv", "results/smoke/summary.csv"):
         path = ROOT / rel
         if path.exists():
             return path
-    raise FileNotFoundError("missing experiment summary; run python experiments/run_synthetic.py --preset v2paper")
+    raise FileNotFoundError("missing experiment summary; expected results/v3_base/summary.csv")
 
 
 def write_result_macros() -> Path:
@@ -70,6 +71,15 @@ def _run(command: list[str]) -> None:
     subprocess.run(command, cwd=PAPER, check=True, text=True, capture_output=True)
 
 
+def write_v3_cached_evidence() -> None:
+    subprocess.run(
+        ["python", str(ROOT / "experiments" / "18_v3_cached_evidence.py")],
+        cwd=ROOT,
+        check=True,
+        text=True,
+    )
+
+
 def run_latex() -> Path:
     errors: list[str] = []
     for suffix in (".aux", ".bbl", ".blg", ".log", ".out", ".pdf"):
@@ -90,6 +100,7 @@ def run_latex() -> Path:
             _run(["bibtex", "main"])
             _run(["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "main.tex"])
             _run(["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "main.tex"])
+            _run(["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "main.tex"])
         except subprocess.CalledProcessError as exc:
             errors.append(f"pdflatex/bibtex failed\nCOMMAND: {' '.join(exc.cmd)}\nSTDOUT:\n{exc.stdout}\nSTDERR:\n{exc.stderr}")
 
@@ -100,18 +111,20 @@ def run_latex() -> Path:
         failure.write_text("# Paper Build Failure\n\n" + "\n\n".join(errors), encoding="utf-8")
         raise RuntimeError(f"paper build failed; see {failure}")
 
-    local_pdf = PAPER / "best-of-n-memory-augmented-world-models.pdf"
-    shutil.copy2(pdf, local_pdf)
     DESKTOP_PDF.parent.mkdir(exist_ok=True)
+    FINAL_PDF.parent.mkdir(exist_ok=True)
     shutil.copy2(pdf, DESKTOP_PDF)
+    shutil.copy2(pdf, FINAL_PDF)
     return DESKTOP_PDF
 
 
 def main() -> None:
+    write_v3_cached_evidence()
     summary = write_result_macros()
     pdf = run_latex()
     print(f"used {summary}")
     print(f"wrote {pdf}")
+    print(f"wrote {FINAL_PDF}")
 
 
 if __name__ == "__main__":

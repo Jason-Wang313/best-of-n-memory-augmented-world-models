@@ -1,0 +1,39 @@
+{
+  "paper": "best-of-n-memory-augmented-world-models-v4.pdf",
+  "source_folder": "C:\\Users\\wangz\\best-of-n-memory-augmented-world-models",
+  "github_remote": "https://github.com/Jason-Wang313/best-of-n-memory-augmented-world-models.git",
+  "repository_pdf": "paper/final/best-of-n-memory-augmented-world-models-v4.pdf",
+  "desktop_pdf": "C:\\Users\\wangz\\OneDrive\\Desktop\\best-of-n-memory-augmented-world-models-v4.pdf",
+  "sha256": "76301DB95A38056CDFB6A64FFD993D5B1A04FA11A74230914FCD7152FC4F66B8",
+  "pages": 26,
+  "verified_on": "2026-06-16",
+  "checks": {
+    "compileall": "passed",
+    "pytest": "8 passed",
+    "literature_regeneration": "129 related-work entries",
+    "protocol_evidence_regeneration": "raw_rows=1152 figures=5",
+    "toytext_benchmark_cards": "benchmarks=3 mismatch=3 repair=2 risk=2",
+    "gymnasium_boundary_cards": "benchmarks=3 mismatch=0 repair=0 precision=3",
+    "paper_build": "passed",
+    "claim_audit": "submission audit complete: memory-impostor v4",
+    "latex_final_log_scan": "passed",
+    "repo_desktop_hash_match": true,
+    "pdf_render": "all 26 pages rendered",
+    "visual_qa": "pages 1, 5, 7, 10, 15, 21, and 26 inspected"
+  },
+  "evidence_summary": {
+    "raw_rows": 1152,
+    "max_n": 64,
+    "main_stale": 0.85,
+    "naive_delta_true": -5.464444444444443,
+    "naive_delta_proxy": 3.3526667512978574,
+    "naive_harm_rate": 0.7777777777777778,
+    "repaired_gain_over_naive": 11.437777777777777,
+    "harmful_stale_levels": 3,
+    "toytext_curve_rows": 288,
+    "toytext_selected_tail_mismatch_benchmarks": 3,
+    "toytext_repair_improvement_benchmarks": 2,
+    "gymnasium_curve_rows": 96,
+    "gymnasium_precision_improvement_benchmarks": 3
+  }
+}

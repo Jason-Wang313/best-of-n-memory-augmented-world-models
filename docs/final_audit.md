@@ -88,6 +88,9 @@ benchmark cards, and an audit script.
   and Desktop v4 PDFs.
 - Submission audit: `python scripts/run_v4_claim_audit.py` checks page count,
   hashes, source map, stale artifact names, evidence values, and LaTeX log.
+- Final PDF SHA256:
+  `76301DB95A38056CDFB6A64FFD993D5B1A04FA11A74230914FCD7152FC4F66B8`
+- Visual QA inspected rendered pages 1, 5, 7, 10, 15, 21, and 26.
 - Anonymous ICLR style: `paper/main.tex` uses `iclr2026_conference,times`, keeps
   `\iclrfinalcopy` commented, and declares `Anonymous Authors`.
 

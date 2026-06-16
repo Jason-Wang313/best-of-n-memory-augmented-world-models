@@ -10,18 +10,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DESKTOP = Path.home() / "OneDrive" / "Desktop"
-REPO_PDF = ROOT / "paper" / "final" / "best-of-n-memory-augmented-world-models-v3.pdf"
-DESKTOP_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v3.pdf"
+REPO_PDF = ROOT / "paper" / "final" / "best-of-n-memory-augmented-world-models-v4.pdf"
+DESKTOP_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v4.pdf"
 SOURCE_MAP = DESKTOP / "PAPER_SOURCE_MAP.md"
-SUMMARY = ROOT / "results" / "v3_cached_evidence" / "summary.json"
+SUMMARY = ROOT / "results" / "v4_protocol_evidence" / "summary.json"
+TOYTEXT_SUMMARY = ROOT / "results" / "v4_toytext_memory" / "summary.json"
+GYM_SUMMARY = ROOT / "results" / "v4_gymnasium_memory" / "summary.json"
 LATEX_LOG = ROOT / "paper" / "main.log"
 OLD_GENERIC_PDF = ROOT / "paper" / ("best-of-n-memory-augmented-world-models" + ".pdf")
+OLD_REPO_V3_PDF = ROOT / "paper" / "final" / "best-of-n-memory-augmented-world-models-v3.pdf"
+OLD_DESKTOP_V3_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v3.pdf"
 
 STALE_PATTERNS = (
     "best-of-n-memory-augmented-world-models-" + "v" + "2.pdf",
     "best-of-n-memory-augmented-world-models" + ".pdf",
     "v" + "2 artifact",
     "v" + "2 review",
+    "best-of-n-memory-augmented-world-models-" + "v" + "3.pdf",
+    "run_" + "v" + "3_claim_audit.py",
+    "18_" + "v" + "3_cached_evidence.py",
+    "v" + "3_cached_evidence",
+    "v" + "3_results_macros.tex",
 )
 
 SCAN_ROOTS = (
@@ -71,6 +80,10 @@ def iter_text_files(root: Path):
 def audit_pdfs() -> None:
     if OLD_GENERIC_PDF.exists():
         fail(f"old generic paper PDF still exists: {OLD_GENERIC_PDF}")
+    if OLD_REPO_V3_PDF.exists():
+        fail(f"old repo v3 PDF still exists: {OLD_REPO_V3_PDF}")
+    if OLD_DESKTOP_V3_PDF.exists():
+        fail(f"old Desktop v3 PDF still exists: {OLD_DESKTOP_V3_PDF}")
     if not REPO_PDF.exists():
         fail(f"missing repo final PDF: {REPO_PDF}")
     if not DESKTOP_PDF.exists():
@@ -87,7 +100,7 @@ def audit_pdfs() -> None:
 
 def audit_evidence() -> None:
     if not SUMMARY.exists():
-        fail(f"missing v3 evidence summary: {SUMMARY}")
+        fail(f"missing v4 evidence summary: {SUMMARY}")
     summary = json.loads(SUMMARY.read_text(encoding="utf-8"))
     if int(summary.get("raw_rows", 0)) != 1152:
         fail("unexpected raw rollout count")
@@ -105,9 +118,27 @@ def audit_evidence() -> None:
     if float(naive.get("harm_rate", 0.0)) < 0.5:
         fail("naive proxy-up/true-down harm rate is too low")
     if float(repaired.get("gain_over_naive", 0.0)) < 8.0:
-        fail("repair gain over naive memory is below v3 expectation")
+        fail("repair gain over naive memory is below v4 expectation")
     if int(diagnostics.get("harmful_stale_levels", 0)) < 3:
         fail("budget harm does not appear across enough stale settings")
+    if not TOYTEXT_SUMMARY.exists():
+        fail(f"missing toy-text benchmark summary: {TOYTEXT_SUMMARY}")
+    toy = json.loads(TOYTEXT_SUMMARY.read_text(encoding="utf-8"))
+    toy_key = toy.get("key_result", {})
+    if int(toy.get("curve_rows", 0)) < 288 or int(toy.get("effect_rows", 0)) < 18:
+        fail("toy-text benchmark ledger is too small")
+    if int(toy_key.get("selected_tail_mismatch_benchmark_count", 0)) < 3:
+        fail("toy-text benchmarks do not expose selected-tail mismatch")
+    if int(toy_key.get("repair_improvement_benchmark_count", 0)) < 2:
+        fail("toy-text repair improvements are below v4 expectation")
+    if not GYM_SUMMARY.exists():
+        fail(f"missing Gymnasium classic-control summary: {GYM_SUMMARY}")
+    gym = json.loads(GYM_SUMMARY.read_text(encoding="utf-8"))
+    gym_key = gym.get("key_result", {})
+    if int(gym.get("curve_rows", 0)) < 96 or int(gym.get("effect_rows", 0)) < 6:
+        fail("classic-control benchmark ledger is too small")
+    if int(gym_key.get("repair_precision_improvement_benchmark_count", 0)) < 3:
+        fail("classic-control provenance boundary card is missing")
 
 
 def audit_stale_text() -> None:
@@ -145,12 +176,12 @@ def audit_source_map() -> None:
         fail(f"missing source map: {SOURCE_MAP}")
     text = SOURCE_MAP.read_text(encoding="utf-8")
     expected = (
-        "best-of-n-memory-augmented-world-models-v3.pdf",
+        "best-of-n-memory-augmented-world-models-v4.pdf",
         "C:\\Users\\wangz\\best-of-n-memory-augmented-world-models",
         "Jason-Wang313/best-of-n-memory-augmented-world-models",
     )
     if not all(part in text for part in expected):
-        fail("source map does not point the v3 Desktop PDF to this folder and repo")
+        fail("source map does not point the v4 Desktop PDF to this folder and repo")
 
 
 def main() -> None:
@@ -159,7 +190,7 @@ def main() -> None:
     audit_stale_text()
     audit_latex_log()
     audit_source_map()
-    print("submission audit complete: memory-impostor v3")
+    print("submission audit complete: memory-impostor v4")
 
 
 if __name__ == "__main__":

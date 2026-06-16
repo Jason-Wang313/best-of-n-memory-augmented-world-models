@@ -14,8 +14,8 @@ PAPER = ROOT / "paper"
 DOCS = ROOT / "docs"
 ONEDRIVE_DESKTOP = Path.home() / "OneDrive" / "Desktop"
 DESKTOP = ONEDRIVE_DESKTOP if ONEDRIVE_DESKTOP.exists() else Path.home() / "Desktop"
-DESKTOP_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v3.pdf"
-FINAL_PDF = PAPER / "final" / "best-of-n-memory-augmented-world-models-v3.pdf"
+DESKTOP_PDF = DESKTOP / "best-of-n-memory-augmented-world-models-v4.pdf"
+FINAL_PDF = PAPER / "final" / "best-of-n-memory-augmented-world-models-v4.pdf"
 
 
 def macro(name: str, value: str) -> str:
@@ -23,11 +23,11 @@ def macro(name: str, value: str) -> str:
 
 
 def _summary_path() -> Path:
-    for rel in ("results/v3_base/summary.csv", "results/paper/summary.csv", "results/full/summary.csv", "results/smoke/summary.csv"):
+    for rel in ("results/v4_base/summary.csv", "results/paper/summary.csv", "results/full/summary.csv", "results/smoke/summary.csv"):
         path = ROOT / rel
         if path.exists():
             return path
-    raise FileNotFoundError("missing experiment summary; expected results/v3_base/summary.csv")
+    raise FileNotFoundError("missing experiment summary; expected results/v4_base/summary.csv")
 
 
 def write_result_macros() -> Path:
@@ -71,13 +71,23 @@ def _run(command: list[str]) -> None:
     subprocess.run(command, cwd=PAPER, check=True, text=True, capture_output=True)
 
 
-def write_v3_cached_evidence() -> None:
+def write_v4_protocol_evidence() -> None:
     subprocess.run(
-        ["python", str(ROOT / "experiments" / "18_v3_cached_evidence.py")],
+        ["python", str(ROOT / "experiments" / "18_v4_protocol_evidence.py")],
         cwd=ROOT,
         check=True,
         text=True,
     )
+
+
+def write_v4_standard_benchmarks() -> None:
+    for script in ("20_v4_toytext_memory_benchmarks.py", "19_v4_gymnasium_memory_benchmarks.py"):
+        subprocess.run(
+            ["python", str(ROOT / "experiments" / script)],
+            cwd=ROOT,
+            check=True,
+            text=True,
+        )
 
 
 def run_latex() -> Path:
@@ -119,7 +129,8 @@ def run_latex() -> Path:
 
 
 def main() -> None:
-    write_v3_cached_evidence()
+    write_v4_protocol_evidence()
+    write_v4_standard_benchmarks()
     summary = write_result_macros()
     pdf = run_latex()
     print(f"used {summary}")

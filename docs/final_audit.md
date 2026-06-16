@@ -34,7 +34,7 @@ statement, not a theorem about arbitrary neural retrievers.
 
 ## Strongest Empirical Result
 
-In the completed v3 base run at stale fraction 0.85 and `N=64`, naive
+In the completed v4 base run at stale fraction 0.85 and `N=64`, naive
 memory-augmented max-score selected rollouts reached mean true return `-13.334`
 while its model proxy score was `-2.591`, producing a proxy-true gap of `10.743`.
 The non-memory baseline reached `-0.180`, and the oracle memory retriever reached
@@ -56,9 +56,12 @@ to `-1.897` and reduced hallucinated-rollout rate to `0.0%`.
 
 ## Biggest Weaknesses
 
-- The benchmark is synthetic and one-dimensional.
-- The v3 submission artifact uses the checked-in `results/v3_base/` CSVs plus
-  the derived `results/v3_cached_evidence/` ledgers.
+- The core mechanism benchmark is synthetic and one-dimensional.
+- The v4 submission artifact uses the checked-in `results/v4_base/` CSVs plus
+  the derived `results/v4_protocol_evidence/` ledgers.
+- The Gymnasium toy-text and classic-control benchmark cards are lightweight
+  standard-environment stress tests, not D4RL, Atari, robotics, or SOTA RL
+  validation.
 - The repair is intentionally simple and should be treated as a diagnostic
   intervention rather than a production-grade retrieval policy.
 - The paper does not validate on neural simulators, robotics environments, or
@@ -66,26 +69,31 @@ to `-1.897` and reduced hallucinated-rollout rate to `0.0%`.
 
 ## Paper-Readiness Judgment
 
-Ready as a scoped mechanism paper: the v3 manuscript foregrounds the
+Ready as a scoped mechanism paper: the v4 manuscript foregrounds the
 memory-impostor mechanism, keeps external-validity limitations visible, reaches
-25 pages, and includes cached stress evidence plus an audit script.
+submission length, and includes protocol stress evidence, standard Gymnasium
+benchmark cards, and an audit script.
 
 ## Verification
 
 - Unit tests: `pytest -q` passed with 8 tests.
 - Literature generation: `python scripts/build_literature.py` passed.
-- V3 cached evidence: `python experiments/18_v3_cached_evidence.py` regenerates
-  bootstrap intervals, harm rates, diagnostic correlations, figures, and macros.
+- V4 protocol evidence: `python experiments/18_v4_protocol_evidence.py`
+  regenerates bootstrap intervals, harm rates, diagnostic correlations, figures,
+  and macros.
+- V4 benchmark cards: `python experiments/20_v4_toytext_memory_benchmarks.py`
+  and `python experiments/19_v4_gymnasium_memory_benchmarks.py` regenerate the
+  standard Gymnasium evidence.
 - Paper build: `python scripts/build_paper.py` passed and writes matching repo
-  and Desktop v3 PDFs.
-- Submission audit: `python scripts/run_v3_claim_audit.py` checks page count,
+  and Desktop v4 PDFs.
+- Submission audit: `python scripts/run_v4_claim_audit.py` checks page count,
   hashes, source map, stale artifact names, evidence values, and LaTeX log.
 - Anonymous ICLR style: `paper/main.tex` uses `iclr2026_conference,times`, keeps
   `\iclrfinalcopy` commented, and declares `Anonymous Authors`.
 
 ## Exact PDF Path
 
-`C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v3.pdf`
+`C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v4.pdf`
 
 ## GitHub Repo URL
 

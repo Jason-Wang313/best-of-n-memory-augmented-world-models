@@ -1,6 +1,6 @@
 # Memory-Impostor Rollouts
 
-This repository is a v3 anonymous ICLR-style research package on a
+This repository is a v4 anonymous ICLR-style research package on a
 narrow failure mode of retrieval-, episodic-memory-, and case-based world
 models under max-score rollout selection.
 
@@ -16,7 +16,8 @@ The package includes:
   memory staleness, retrieval precision, and true rollout utility;
 - naive, oracle, non-memory, and repaired memory-augmented world models;
 - candidate-budget rollout-selection experiments across `N`, staleness, and repair settings;
-- publication figures, raw CSV outputs, and v3 cached stress evidence;
+- publication figures, raw CSV outputs, v4 protocol stress evidence, exact Gymnasium
+  toy-text cards, and classic-control boundary cards;
 - literature sweep and hostile prior-work docs;
 - an anonymous ICLR 2026 LaTeX paper source and build script.
 
@@ -26,16 +27,18 @@ The package includes:
 cd C:\Users\wangz\best-of-n-memory-augmented-world-models
 python -m pip install -e .
 pytest
-python experiments\18_v3_cached_evidence.py
+python experiments\18_v4_protocol_evidence.py
+python experiments\20_v4_toytext_memory_benchmarks.py
+python experiments\19_v4_gymnasium_memory_benchmarks.py
 python scripts\build_literature.py
 python scripts\build_paper.py
-python scripts\run_v3_claim_audit.py
+python scripts\run_v4_claim_audit.py
 ```
 
 The versioned Desktop PDF target is:
 
 ```text
-C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v3.pdf
+C:\Users\wangz\OneDrive\Desktop\best-of-n-memory-augmented-world-models-v4.pdf
 ```
 
 ## Paper Angle
@@ -51,6 +54,8 @@ The final contribution is deliberately scoped as a mechanism paper:
    counterfactual memory dropout exposes the mechanism.
 4. A simple repair using recency-aware retrieval, disagreement-aware memory
    gating, and dropout-variance penalties mitigates the synthetic failure.
+5. Standard Gymnasium toy-text cards expose the same selected-tail mismatch,
+   while classic-control cards are reported as boundary/provenance evidence.
 
 This is not presented as evidence that all deployed memory-augmented agents fail
 this way. It is a compact runnable diagnostic for an architectural interaction

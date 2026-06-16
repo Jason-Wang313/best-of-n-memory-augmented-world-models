@@ -1,0 +1,110 @@
+{
+  "artifacts": {
+    "candidates": "results/v4_gymnasium_memory/candidate_records.csv",
+    "curves": "results/v4_gymnasium_memory/selection_curves.csv",
+    "effects": "results/v4_gymnasium_memory/benchmark_effects.csv",
+    "figure": "paper/figures/v4_gymnasium_memory_benchmarks.pdf"
+  },
+  "benchmark_diagnostics": {
+    "Acrobot-v1": {
+      "naive_proxy_delta_n64_vs_n1_ci": {
+        "hi": 15.453771673042986,
+        "lo": 12.024997438458314,
+        "mean": 13.73938455575065
+      },
+      "naive_true_delta_n64_vs_n1_ci": {
+        "hi": 2.077456374147239,
+        "lo": 0.2496028576714835,
+        "mean": 1.1635296159093613
+      },
+      "repair_helped": false,
+      "repair_improved_precision": true,
+      "repair_precision_gain_n64_over_naive_ci": {
+        "hi": 0.6671534076568668,
+        "lo": 0.627732060783753,
+        "mean": 0.64744273422031
+      },
+      "repair_true_gain_n64_over_naive_ci": {
+        "hi": -0.21180533301281912,
+        "lo": -2.6966934029983207,
+        "mean": -1.45424936800557
+      },
+      "selected_tail_mismatch": false
+    },
+    "CartPole-v1": {
+      "naive_proxy_delta_n64_vs_n1_ci": {
+        "hi": 1.5957642329510016,
+        "lo": 1.5036232064240664,
+        "mean": 1.549693719687534
+      },
+      "naive_true_delta_n64_vs_n1_ci": {
+        "hi": 10.362380968199684,
+        "lo": 6.055258182637198,
+        "mean": 8.208819575418442
+      },
+      "repair_helped": false,
+      "repair_improved_precision": true,
+      "repair_precision_gain_n64_over_naive_ci": {
+        "hi": 0.778216129402856,
+        "lo": 0.7013749704021393,
+        "mean": 0.7397955499024976
+      },
+      "repair_true_gain_n64_over_naive_ci": {
+        "hi": 0.004005399297639656,
+        "lo": -6.538397878841771,
+        "mean": -3.2671962397720655
+      },
+      "selected_tail_mismatch": false
+    },
+    "MountainCar-v0": {
+      "naive_proxy_delta_n64_vs_n1_ci": {
+        "hi": 1.8606534959969938,
+        "lo": 0.2296434459130392,
+        "mean": 1.0451484709550165
+      },
+      "naive_true_delta_n64_vs_n1_ci": {
+        "hi": 4.66538146124243,
+        "lo": -1.1908014870652672,
+        "mean": 1.7372899870885814
+      },
+      "repair_helped": false,
+      "repair_improved_precision": true,
+      "repair_precision_gain_n64_over_naive_ci": {
+        "hi": 0.6433748946865397,
+        "lo": 0.5085714285714286,
+        "mean": 0.5759731616289842
+      },
+      "repair_true_gain_n64_over_naive_ci": {
+        "hi": 4.182615411904322,
+        "lo": 0.0,
+        "mean": 2.091307705952161
+      },
+      "selected_tail_mismatch": false
+    }
+  },
+  "benchmarks": [
+    "CartPole-v1",
+    "MountainCar-v0",
+    "Acrobot-v1"
+  ],
+  "curve_rows": 96,
+  "effect_rows": 6,
+  "experiment": "v4_gymnasium_memory_benchmarks",
+  "key_result": {
+    "repair_improvement_benchmark_count": 0,
+    "repair_precision_improvement_benchmark_count": 3,
+    "selected_tail_mismatch_benchmark_count": 0
+  },
+  "n_values": [
+    1,
+    4,
+    16,
+    64
+  ],
+  "strategies": [
+    "recent_only",
+    "naive_memory",
+    "repaired_memory",
+    "oracle_memory"
+  ]
+}

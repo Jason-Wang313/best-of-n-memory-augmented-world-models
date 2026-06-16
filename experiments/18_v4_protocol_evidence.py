@@ -10,7 +10,7 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RESULTS = ROOT / "results" / "v3_cached_evidence"
+RESULTS = ROOT / "results" / "v4_protocol_evidence"
 PAPER = ROOT / "paper"
 FIGURES = PAPER / "figures"
 
@@ -35,10 +35,10 @@ def _macro(name: str, value: str) -> str:
 
 
 def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
-    raw_path = ROOT / "results" / "v3_base" / "raw_rollouts.csv"
-    summary_path = ROOT / "results" / "v3_base" / "summary.csv"
+    raw_path = ROOT / "results" / "v4_base" / "raw_rollouts.csv"
+    summary_path = ROOT / "results" / "v4_base" / "summary.csv"
     if not raw_path.exists() or not summary_path.exists():
-        raise FileNotFoundError("missing results/v3_base artifacts")
+        raise FileNotFoundError("missing results/v4_base artifacts")
     raw = pd.read_csv(raw_path)
     summary = pd.read_csv(summary_path)
     return raw, summary
@@ -209,7 +209,7 @@ def write_figures(
     handles2, labels2 = ax2.get_legend_handles_labels()
     ax1.legend(handles1 + handles2, labels1 + labels2, frameon=False, fontsize=8, loc="best")
     fig.tight_layout()
-    path = RESULTS / "v3_budget_harm_by_staleness.pdf"
+    path = RESULTS / "protocol_budget_harm_by_staleness.pdf"
     fig.savefig(path)
     plt.close(fig)
     paths.append(path)
@@ -231,7 +231,7 @@ def write_figures(
     axis.tick_params(axis="x", rotation=15)
     axis.grid(axis="y", alpha=0.25)
     fig.tight_layout()
-    path = RESULTS / "v3_harm_rate_by_strategy.pdf"
+    path = RESULTS / "protocol_harm_rate_by_strategy.pdf"
     fig.savefig(path)
     plt.close(fig)
     paths.append(path)
@@ -263,7 +263,7 @@ def write_figures(
     axis.legend(frameon=False, fontsize=8)
     axis.grid(axis="y", alpha=0.25)
     fig.tight_layout()
-    path = RESULTS / "v3_risk_correlation.pdf"
+    path = RESULTS / "protocol_risk_correlation.pdf"
     fig.savefig(path)
     plt.close(fig)
     paths.append(path)
@@ -285,7 +285,7 @@ def write_figures(
     axis.tick_params(axis="x", rotation=15)
     axis.grid(axis="y", alpha=0.25)
     fig.tight_layout()
-    path = RESULTS / "v3_bootstrap_true_return.pdf"
+    path = RESULTS / "protocol_bootstrap_true_return.pdf"
     fig.savefig(path)
     plt.close(fig)
     paths.append(path)
@@ -301,7 +301,7 @@ def write_figures(
     axis.grid(alpha=0.25)
     axis.legend(frameon=False, fontsize=8)
     fig.tight_layout()
-    path = RESULTS / "v3_precision_gap_tradeoff.pdf"
+    path = RESULTS / "protocol_precision_gap_tradeoff.pdf"
     fig.savefig(path)
     plt.close(fig)
     paths.append(path)
@@ -353,7 +353,7 @@ def write_macros(summary: pd.DataFrame, ci: pd.DataFrame, deltas: pd.DataFrame, 
     ]["pearson_r"].iloc[0]
 
     stale_levels = int(summary["stale_fraction"].nunique())
-    raw_rows = int(len(pd.read_csv(ROOT / "results" / "v3_base" / "raw_rollouts.csv")))
+    raw_rows = int(len(pd.read_csv(ROOT / "results" / "v4_base" / "raw_rollouts.csv")))
     harmful_levels = int(deltas[(deltas["strategy"] == "memory_bon") & (deltas["proxy_up_true_down"])].shape[0])
 
     summary_json = {
@@ -400,40 +400,40 @@ def write_macros(summary: pd.DataFrame, ci: pd.DataFrame, deltas: pd.DataFrame, 
     (RESULTS / "summary.json").write_text(json.dumps(summary_json, indent=2, sort_keys=True), encoding="utf-8")
 
     text = ""
-    text += _macro("VThreeRawRows", f"{raw_rows:,}")
-    text += _macro("VThreeSummaryRows", f"{len(summary):,}")
-    text += _macro("VThreeStaleLevels", str(stale_levels))
-    text += _macro("VThreeMainStale", _fmt(main_stale, 2))
-    text += _macro("VThreeMinN", str(min_n))
-    text += _macro("VThreeMaxN", str(max_n))
-    text += _macro("VThreeNaiveNOneTrue", _fmt(main_low.loc["memory_bon", "true_return"], 2))
-    text += _macro("VThreeNaiveMaxTrue", _fmt(main.loc["memory_bon", "true_return"], 2))
-    text += _macro("VThreeNaiveMaxTrueCILow", _fmt(ci_true.loc["memory_bon", "ci_low"], 2))
-    text += _macro("VThreeNaiveMaxTrueCIHigh", _fmt(ci_true.loc["memory_bon", "ci_high"], 2))
-    text += _macro("VThreeNaiveDeltaTrue", _fmt(delta_main.loc["memory_bon", "delta_true_return"], 2))
-    text += _macro("VThreeNaiveDeltaProxy", _fmt(delta_main.loc["memory_bon", "delta_proxy_score"], 2))
-    text += _macro("VThreeNaiveMaxGap", _fmt(main.loc["memory_bon", "proxy_true_gap"], 2))
-    text += _macro("VThreeNaiveMaxGapCILow", _fmt(ci_gap.loc["memory_bon", "ci_low"], 2))
-    text += _macro("VThreeNaiveMaxGapCIHigh", _fmt(ci_gap.loc["memory_bon", "ci_high"], 2))
-    text += _macro("VThreeNaiveHarmRate", _pct(harm_main.loc["memory_bon", "proxy_gain_true_harm_rate"]))
-    text += _macro("VThreeNaivePrecision", _pct(main.loc["memory_bon", "retrieval_precision"]))
-    text += _macro("VThreeNaiveStaleRate", _pct(main.loc["memory_bon", "retrieval_stale_rate"]))
-    text += _macro("VThreeNaiveHallucination", _pct(main.loc["memory_bon", "hallucinated_rollout"]))
-    text += _macro("VThreeBaseMaxTrue", _fmt(main.loc["base_bon", "true_return"], 2))
-    text += _macro("VThreeRepairedMaxTrue", _fmt(main.loc["repaired_memory_bon", "true_return"], 2))
-    text += _macro("VThreeRepairedMaxTrueCILow", _fmt(ci_true.loc["repaired_memory_bon", "ci_low"], 2))
-    text += _macro("VThreeRepairedMaxTrueCIHigh", _fmt(ci_true.loc["repaired_memory_bon", "ci_high"], 2))
-    text += _macro("VThreeRepairGain", _fmt(main.loc["repaired_memory_bon", "true_return"] - main.loc["memory_bon", "true_return"], 2))
-    text += _macro("VThreeRepairedHarmRate", _pct(harm_main.loc["repaired_memory_bon", "proxy_gain_true_harm_rate"]))
-    text += _macro("VThreeRepairedPrecision", _pct(main.loc["repaired_memory_bon", "retrieval_precision"]))
-    text += _macro("VThreeRepairedStaleRate", _pct(main.loc["repaired_memory_bon", "retrieval_stale_rate"]))
-    text += _macro("VThreeRepairedHallucination", _pct(main.loc["repaired_memory_bon", "hallucinated_rollout"]))
-    text += _macro("VThreeOracleMaxTrue", _fmt(main.loc["oracle_memory_bon", "true_return"], 2))
-    text += _macro("VThreeOracleGap", _fmt(main.loc["oracle_memory_bon", "true_return"] - main.loc["repaired_memory_bon", "true_return"], 2))
-    text += _macro("VThreeRiskGapCorr", _fmt(corr_risk_gap, 2))
-    text += _macro("VThreePrecisionGapCorr", _fmt(corr_precision_gap, 2))
-    text += _macro("VThreeHarmfulStaleLevels", f"{harmful_levels}/{stale_levels}")
-    (PAPER / "v3_results_macros.tex").write_text(text, encoding="utf-8")
+    text += _macro("EvidenceRawRows", f"{raw_rows:,}")
+    text += _macro("EvidenceSummaryRows", f"{len(summary):,}")
+    text += _macro("EvidenceStaleLevels", str(stale_levels))
+    text += _macro("EvidenceMainStale", _fmt(main_stale, 2))
+    text += _macro("EvidenceMinN", str(min_n))
+    text += _macro("EvidenceMaxN", str(max_n))
+    text += _macro("EvidenceNaiveNOneTrue", _fmt(main_low.loc["memory_bon", "true_return"], 2))
+    text += _macro("EvidenceNaiveMaxTrue", _fmt(main.loc["memory_bon", "true_return"], 2))
+    text += _macro("EvidenceNaiveMaxTrueCILow", _fmt(ci_true.loc["memory_bon", "ci_low"], 2))
+    text += _macro("EvidenceNaiveMaxTrueCIHigh", _fmt(ci_true.loc["memory_bon", "ci_high"], 2))
+    text += _macro("EvidenceNaiveDeltaTrue", _fmt(delta_main.loc["memory_bon", "delta_true_return"], 2))
+    text += _macro("EvidenceNaiveDeltaProxy", _fmt(delta_main.loc["memory_bon", "delta_proxy_score"], 2))
+    text += _macro("EvidenceNaiveMaxGap", _fmt(main.loc["memory_bon", "proxy_true_gap"], 2))
+    text += _macro("EvidenceNaiveMaxGapCILow", _fmt(ci_gap.loc["memory_bon", "ci_low"], 2))
+    text += _macro("EvidenceNaiveMaxGapCIHigh", _fmt(ci_gap.loc["memory_bon", "ci_high"], 2))
+    text += _macro("EvidenceNaiveHarmRate", _pct(harm_main.loc["memory_bon", "proxy_gain_true_harm_rate"]))
+    text += _macro("EvidenceNaivePrecision", _pct(main.loc["memory_bon", "retrieval_precision"]))
+    text += _macro("EvidenceNaiveStaleRate", _pct(main.loc["memory_bon", "retrieval_stale_rate"]))
+    text += _macro("EvidenceNaiveHallucination", _pct(main.loc["memory_bon", "hallucinated_rollout"]))
+    text += _macro("EvidenceBaseMaxTrue", _fmt(main.loc["base_bon", "true_return"], 2))
+    text += _macro("EvidenceRepairedMaxTrue", _fmt(main.loc["repaired_memory_bon", "true_return"], 2))
+    text += _macro("EvidenceRepairedMaxTrueCILow", _fmt(ci_true.loc["repaired_memory_bon", "ci_low"], 2))
+    text += _macro("EvidenceRepairedMaxTrueCIHigh", _fmt(ci_true.loc["repaired_memory_bon", "ci_high"], 2))
+    text += _macro("EvidenceRepairGain", _fmt(main.loc["repaired_memory_bon", "true_return"] - main.loc["memory_bon", "true_return"], 2))
+    text += _macro("EvidenceRepairedHarmRate", _pct(harm_main.loc["repaired_memory_bon", "proxy_gain_true_harm_rate"]))
+    text += _macro("EvidenceRepairedPrecision", _pct(main.loc["repaired_memory_bon", "retrieval_precision"]))
+    text += _macro("EvidenceRepairedStaleRate", _pct(main.loc["repaired_memory_bon", "retrieval_stale_rate"]))
+    text += _macro("EvidenceRepairedHallucination", _pct(main.loc["repaired_memory_bon", "hallucinated_rollout"]))
+    text += _macro("EvidenceOracleMaxTrue", _fmt(main.loc["oracle_memory_bon", "true_return"], 2))
+    text += _macro("EvidenceOracleGap", _fmt(main.loc["oracle_memory_bon", "true_return"] - main.loc["repaired_memory_bon", "true_return"], 2))
+    text += _macro("EvidenceRiskGapCorr", _fmt(corr_risk_gap, 2))
+    text += _macro("EvidencePrecisionGapCorr", _fmt(corr_precision_gap, 2))
+    text += _macro("EvidenceHarmfulStaleLevels", f"{harmful_levels}/{stale_levels}")
+    (PAPER / "v4_results_macros.tex").write_text(text, encoding="utf-8")
     return summary_json
 
 
@@ -448,7 +448,7 @@ def main() -> None:
     write_tables(ci, deltas, harms, corrs, max_table)
     figures = write_figures(summary, ci, deltas, harms, corrs, max_table)
     summary_json = write_macros(summary, ci, deltas, harms, corrs)
-    print(f"v3 cached evidence complete: {RESULTS}")
+    print(f"v4 protocol evidence complete: {RESULTS}")
     print(f"raw_rows={summary_json['raw_rows']} figures={len(figures)}")
 
 

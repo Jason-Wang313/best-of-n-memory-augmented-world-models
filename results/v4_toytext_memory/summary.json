@@ -1,0 +1,110 @@
+{
+  "artifacts": {
+    "candidates": "results/v4_toytext_memory/candidate_records.csv",
+    "curves": "results/v4_toytext_memory/selection_curves.csv",
+    "effects": "results/v4_toytext_memory/benchmark_effects.csv",
+    "figure": "paper/figures/v4_toytext_memory_benchmarks.pdf"
+  },
+  "benchmark_diagnostics": {
+    "CliffWalkingSlippery-v1": {
+      "naive_proxy_delta_n64_vs_n1_ci": {
+        "hi": 12.660460392191922,
+        "lo": 10.882420855792757,
+        "mean": 11.743829590926213
+      },
+      "naive_risk_delta_n64_vs_n1_ci": {
+        "hi": 0.511553950317396,
+        "lo": 0.4389530694970781,
+        "mean": 0.47449816837670106
+      },
+      "naive_true_delta_n64_vs_n1_ci": {
+        "hi": -43.53156367540391,
+        "lo": -50.6438407702722,
+        "mean": -46.975318363704865
+      },
+      "repair_helped": true,
+      "repair_true_gain_n64_over_naive_ci": {
+        "hi": 138.36358273449085,
+        "lo": 127.27299445228716,
+        "mean": 132.6041394881931
+      },
+      "risk_increased": true,
+      "selected_tail_mismatch": true
+    },
+    "FrozenLake-v1": {
+      "naive_proxy_delta_n64_vs_n1_ci": {
+        "hi": 0.6549697189907063,
+        "lo": 0.5701678318246045,
+        "mean": 0.6170277249164583
+      },
+      "naive_risk_delta_n64_vs_n1_ci": {
+        "hi": -0.01371573461769342,
+        "lo": -0.028140887413652876,
+        "mean": -0.021446018261337907
+      },
+      "naive_true_delta_n64_vs_n1_ci": {
+        "hi": -0.008794413100704897,
+        "lo": -0.010105153441154091,
+        "mean": -0.009466481541291271
+      },
+      "repair_helped": false,
+      "repair_true_gain_n64_over_naive_ci": {
+        "hi": 0.004962326918940512,
+        "lo": 0.0023391127068400643,
+        "mean": 0.003574660774473076
+      },
+      "risk_increased": false,
+      "selected_tail_mismatch": true
+    },
+    "Taxi-v3": {
+      "naive_proxy_delta_n64_vs_n1_ci": {
+        "hi": 10.789477844361995,
+        "lo": 8.913752782985414,
+        "mean": 9.875148614895574
+      },
+      "naive_risk_delta_n64_vs_n1_ci": {
+        "hi": 1.4313890122885755,
+        "lo": 1.1733454698188648,
+        "mean": 1.3103424555587437
+      },
+      "naive_true_delta_n64_vs_n1_ci": {
+        "hi": -30.257100895011206,
+        "lo": -36.807146030277636,
+        "mean": -33.69452028579626
+      },
+      "repair_helped": true,
+      "repair_true_gain_n64_over_naive_ci": {
+        "hi": 69.70351228505496,
+        "lo": 62.11495593026907,
+        "mean": 65.94663032811633
+      },
+      "risk_increased": true,
+      "selected_tail_mismatch": true
+    }
+  },
+  "benchmarks": [
+    "FrozenLake-v1",
+    "CliffWalkingSlippery-v1",
+    "Taxi-v3"
+  ],
+  "curve_rows": 288,
+  "effect_rows": 18,
+  "experiment": "v4_toytext_memory_benchmarks",
+  "key_result": {
+    "naive_risk_increase_benchmark_count": 2,
+    "repair_improvement_benchmark_count": 2,
+    "selected_tail_mismatch_benchmark_count": 3
+  },
+  "n_values": [
+    1,
+    4,
+    16,
+    64
+  ],
+  "strategies": [
+    "recent_only",
+    "naive_memory",
+    "repaired_memory",
+    "oracle_memory"
+  ]
+}

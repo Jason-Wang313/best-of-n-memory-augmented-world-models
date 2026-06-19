@@ -86,11 +86,16 @@ benchmark cards, and an audit script.
   standard Gymnasium evidence.
 - Paper build: `python scripts/build_paper.py` passed and writes matching repo
   and Desktop v4 PDFs.
+- Boxed-link PDF rebuild from frozen paper artifacts: passed.
 - Submission audit: `python scripts/run_v4_claim_audit.py` checks page count,
   hashes, source map, stale artifact names, evidence values, and LaTeX log.
 - Final PDF SHA256:
-  `76301DB95A38056CDFB6A64FFD993D5B1A04FA11A74230914FCD7152FC4F66B8`
-- Visual QA inspected rendered pages 1, 5, 7, 10, 15, 21, and 26.
+  `044823FC55AC337C5E2B1FAD514B3457A38B0046378FC657477EC61AFAD6F7BA`
+- PDF annotation audit found 90 link annotations: 74 green citation boxes and
+  16 red internal-reference boxes. All annotations use 1pt visible borders
+  matching the VLA role-model profile.
+- Visual QA inspected rendered pages 1, 2, 3, 4, 5, 6, 7, 10, 15, 17, 21, 22,
+  and 26.
 - Anonymous ICLR style: `paper/main.tex` uses `iclr2026_conference,times`, keeps
   `\iclrfinalcopy` commented, and declares `Anonymous Authors`.
 
